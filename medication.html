@@ -1,121 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Health System - Medication Reminder</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background: url('your-background-image.jpg') no-repeat center center fixed;
-            background-size: cover;
-            color: #333;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Health System - Medication Reminder</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: url('your-background-image.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        .medication-reminder {
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 5px;
-            max-width: 400px;
-            width: 100%;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
+    .medication-reminder {
+      padding: 20px;
+      background-color: rgba(255, 255, 255, 0.9);
+      border-radius: 5px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
 
-        .medication-reminder h2 {
-            text-align: center;
-            margin-bottom: 20px;
-            color: #0077cc;
-        }
+    .medication-reminder h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #0077cc;
+    }
 
-        .medication-reminder label {
-            display: block;
-            margin: 10px 0 5px;
-        }
+    .medication-reminder label {
+      display: block;
+      margin: 10px 0 5px;
+    }
 
-        .medication-reminder input {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+    .medication-reminder input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
 
-        .medication-reminder button {
-            width: 100%;
-            padding: 10px;
-            background-color: #0077cc;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-        }
+    .medication-reminder button {
+      width: 100%;
+      padding: 10px;
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
 
-        .medication-reminder button:hover {
-            background-color: #005ea2;
-        }
+    .medication-reminder button:hover {
+      background-color: #005ea2;
+    }
 
-        #reminder-status {
-            margin-top: 20px;
-            text-align: center;
-            font-weight: bold;
-            color: #28a745;
-        }
-    </style>
+    #reminder-status {
+      margin-top: 20px;
+      text-align: center;
+      font-weight: bold;
+      color: #28a745;
+    }
+  </style>
 </head>
 <body>
+  <!-- Audio alert -->
+  <audio id="reminderSound" src="ring.mp3" preload="auto"></audio>
 
-    <section class="medication-reminder">
-        <h2>Set Up Your Medication Reminder</h2>
-        <form id="reminder-form">
-            <label for="medication-name">Medication Name:</label>
-            <input type="text" id="medication-name" required>
+  <section class="medication-reminder">
+    <h2>Set Up Your Medication Reminder</h2>
+    <form id="reminder-form">
+      <label for="medication-name">Medication Name:</label>
+      <input type="text" id="medication-name" required>
 
-            <label for="dosage">Dosage:</label>
-            <input type="text" id="dosage" required>
+      <label for="dosage">Dosage:</label>
+      <input type="text" id="dosage" required>
 
-            <label for="time">Reminder Time:</label>
-            <input type="time" id="time" required>
+      <label for="time">Reminder Time:</label>
+      <input type="time" id="time" required>
 
-            <label for="frequency">Frequency (per day):</label>
-            <input type="number" id="frequency" min="1" required>
+      <label for="frequency">Frequency (per day):</label>
+      <input type="number" id="frequency" min="1" required>
 
-            <button type="submit">Set Reminder</button>
-        </form>
+      <button type="submit">Set Reminder</button>
+    </form>
 
-        <div id="reminder-status"></div>
-    </section>
+    <div id="reminder-status"></div>
+  </section>
 
-    <script>
-        document.getElementById('reminder-form').addEventListener('submit', function(e) {
-            e.preventDefault();
+  <script>
+    const reminderAudio = document.getElementById('reminderSound');
+    let audioUnlocked = false;
 
-            const medicationName = document.getElementById('medication-name').value;
-            const dosage = document.getElementById('dosage').value;
-            const time = document.getElementById('time').value;
-            const frequency = document.getElementById('frequency').value;
+    // Unlock audio after first user interaction
+    function unlockAudio() {
+      if (!audioUnlocked) {
+        reminderAudio.play().then(() => {
+          reminderAudio.pause();
+          reminderAudio.currentTime = 0;
+        }).catch(()=>{});
+        audioUnlocked = true;
+        window.removeEventListener('click', unlockAudio);
+        window.removeEventListener('keydown', unlockAudio);
+      }
+    }
+    window.addEventListener('click', unlockAudio);
+    window.addEventListener('keydown', unlockAudio);
 
-            // Example using browser notifications (requires user permission):
-            if ('Notification' in window) {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') {
-                        new Notification(`Medication Reminder: ${medicationName}`, {
-                            body: `It's time to take ${dosage}.`,
-                            icon: 'medication-icon.png' // Add your icon path here
-                        });
-                    }
-                });
+    document.getElementById('reminder-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const medicationName = document.getElementById('medication-name').value;
+      const dosage = document.getElementById('dosage').value;
+      const time = document.getElementById('time').value;
+      const frequency = document.getElementById('frequency').value;
+
+      // Calculate the delay until reminder time
+      const now = new Date();
+      const [hours, minutes] = time.split(':').map(Number);
+      const reminderTime = new Date();
+      reminderTime.setHours(hours, minutes, 0, 0);
+
+      if (reminderTime < now) {
+        // If the time is earlier today, schedule for tomorrow
+        reminderTime.setDate(reminderTime.getDate() + 1);
+      }
+
+      const delay = reminderTime - now;
+
+      setTimeout(() => {
+        // Show notification
+        if ('Notification' in window) {
+          Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+              new Notification(`Medication Reminder: ${medicationName}`, {
+                body: `It's time to take ${dosage}.`,
+                icon: 'medication-icon.png'
+              });
             }
+          });
+        }
 
-            document.getElementById('reminder-status').innerText = `Reminder set for ${medicationName} at ${time} (${frequency} times per day).`;
-        });
-    </script>
+        // Play sound
+        if (audioUnlocked) {
+          reminderAudio.currentTime = 0;
+          reminderAudio.play().catch(e => console.log("Audio error:", e));
+        }
+      }, delay);
 
+      document.getElementById('reminder-status').innerText =
+        `Reminder set for ${medicationName} at ${time} (${frequency} times per day).`;
+    });
+  </script>
 </body>
 </html>
