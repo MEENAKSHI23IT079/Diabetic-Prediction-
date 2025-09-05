@@ -78,19 +78,38 @@
         .login-container .signup-link a:hover {
             text-decoration: underline;
         }
+        .error-message {
+            background: #ffe6e6;
+            color: #d63031;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #d63031;
+            display: none;
+        }
+        .success-message {
+            background: #e6f7e6;
+            color: #00b894;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #00b894;
+            display: none;
+        }
     </style>
 </head>
 <body>
-
     <div class="login-container">
         <h2>Login</h2>
-        <form action="index.html" method="POST">
+        
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+        
+        <form id="loginForm" action="index.html" method="POST">
             <label for="email">Email</label>
             <input type="email" id="email" name="email" required>
-
             <label for="password">Password</label>
             <input type="password" id="password" name="password" required>
-
             <input type="submit" value="Login">
         </form>
         
@@ -103,7 +122,58 @@
         </div>
     </div>
 
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            
+            // Hide previous messages
+            errorMessage.style.display = 'none';
+            successMessage.style.display = 'none';
+            
+            // Basic validation
+            if (!email || !password) {
+                errorMessage.textContent = 'Please fill in all fields!';
+                errorMessage.style.display = 'block';
+                return;
+            }
+            
+            // Check if user exists from signup
+            const userData = localStorage.getItem('userData');
+            
+            if (userData) {
+                const user = JSON.parse(userData);
+                if (user.email === email) {
+                    successMessage.textContent = 'Login successful! Redirecting...';
+                    successMessage.style.display = 'block';
+                    
+                    localStorage.setItem('isLoggedIn', 'true');
+                    
+                    setTimeout(function() {
+                        window.location.href = 'index.html';
+                    }, 1000);
+                    return;
+                }
+            }
+            
+            // Demo login for testing
+            if (email === 'demo@diabeticcare.com' && password === 'demo123') {
+                successMessage.textContent = 'Demo login successful! Redirecting...';
+                successMessage.style.display = 'block';
+                localStorage.setItem('isLoggedIn', 'true');
+                
+                setTimeout(function() {
+                    window.location.href = 'index.html';
+                }, 1000);
+            } else {
+                errorMessage.textContent = 'Invalid email or password. Try: demo@diabeticcare.com / demo123';
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
 </body>
-
 </html>
-
