@@ -8,13 +8,14 @@ previews:
 
 services:
   # Flask Web Service
+  - services:
   - type: web
     name: diabetic-prediction-app
     runtime: python
-    repo: https://github.com/MEENAKSHI23IT079/Diabetic-Prediction- .git
+    repo: https://github.com/MEENAKSHI23IT079/Diabetic-Prediction.git
     branch: main
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
+    startCommand: streamlit run app.py --server.port $PORT --server.address 0.0.0.0
     numInstances: 1
     region: oregon
     plan: standard
