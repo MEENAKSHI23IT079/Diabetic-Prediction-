@@ -3,126 +3,527 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Real-Time Monitoring Form</title>
+    <title>Real-Time Monitoring - Smart Health System for Diabetes</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
             color: #333;
+            min-height: 100vh;
         }
+        
+        .header {
+            background-color: #0077cc;
+            color: white;
+            padding: 15px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .back-btn {
+            background: none;
+            border: 2px solid white;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin-left: auto;
+        }
+        
+        .back-btn:hover {
+            background: white;
+            color: #0077cc;
+        }
+        
         .container {
-            max-width: 600px;
-            margin: 50px auto;
+            max-width: 800px;
+            margin: 30px auto;
             padding: 20px;
             background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
-        h2 {
-            text-align: center;
+        
+        .form-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #0077cc;
+        }
+        
+        .form-section h3 {
             color: #0077cc;
+            margin-top: 0;
             margin-bottom: 20px;
         }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            flex: 1;
+        }
+        
         label {
             font-weight: bold;
             display: block;
-            margin-top: 10px;
+            margin-bottom: 8px;
             color: #555;
         }
-        input[type="text"], input[type="email"], input[type="number"], select {
-            width: calc(100% - 22px);
-            padding: 10px;
-            margin-top: 5px;
-            margin-bottom: 20px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
-        button {
+        
+        input[type="text"], 
+        input[type="email"], 
+        input[type="number"], 
+        input[type="tel"],
+        select {
             width: 100%;
             padding: 12px;
-            background-color: #0077cc;
+            margin-bottom: 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #0077cc;
+            box-shadow: 0 0 10px rgba(0, 119, 204, 0.2);
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #0077cc, #005fa3);
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
+            transition: all 0.3s ease;
+            margin: 5px;
         }
-        button:hover {
-            background-color: #005fa3;
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 119, 204, 0.4);
         }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        
         #labsList {
             margin-top: 20px;
         }
-        .lab {
+        
+        .lab-card {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #28a745;
+            transition: transform 0.3s ease;
+        }
+        
+        .lab-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        
+        .lab-name {
+            font-weight: bold;
+            color: #0077cc;
+            font-size: 1.2rem;
             margin-bottom: 10px;
+        }
+        
+        .lab-address {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .lab-distance {
+            color: #28a745;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .lab-rating {
+            color: #ffc107;
+            margin-left: 10px;
+        }
+        
+        .success-message, .error-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .booking-summary {
+            background: #e7f3ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #0077cc;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #0077cc;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .container {
+                margin: 20px;
+                padding: 15px;
+            }
         }
     </style>
 </head>
 <body>
 
+    <div class="header">
+        <h1>🩺 Real-Time Monitoring</h1>
+        <a href="index.html" class="back-btn">← Back to Home</a>
+    </div>
+
     <div class="container">
-        <h2>Real-Time Monitoring</h2>
+        <div id="successMessage" class="success-message"></div>
+        <div id="errorMessage" class="error-message"></div>
+        
         <form id="monitoringForm">
-            <label for="patientName">Patient Name</label>
-            <input type="text" id="patientName" name="patientName" required>
+            <div class="form-section">
+                <h3>👤 Patient Information</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="patientName">Full Name</label>
+                        <input type="text" id="patientName" name="patientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" min="1" max="120" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="contactNo">Contact Number</label>
+                        <input type="tel" id="contactNo" name="contactNo" required>
+                    </div>
+                </div>
+            </div>
 
-            <label for="age">Age</label>
-            <input type="number" id="age" name="age" required>
+            <div class="form-section">
+                <h3>📋 Monitoring Details</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="purpose">Monitoring Purpose</label>
+                        <select id="purpose" name="purpose" required>
+                            <option value="">Select Purpose</option>
+                            <option value="routine-checkup">Routine Diabetes Checkup</option>
+                            <option value="glucose-monitoring">Glucose Level Monitoring</option>
+                            <option value="hba1c">HbA1c Test</option>
+                            <option value="comprehensive">Comprehensive Diabetes Panel</option>
+                            <option value="emergency">Emergency Monitoring</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="urgency">Urgency Level</label>
+                        <select id="urgency" name="urgency" required>
+                            <option value="">Select Urgency</option>
+                            <option value="routine">Routine (1-3 days)</option>
+                            <option value="urgent">Urgent (Same day)</option>
+                            <option value="emergency">Emergency (Immediate)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="symptoms">Current Symptoms (Optional)</label>
+                    <input type="text" id="symptoms" name="symptoms" placeholder="e.g., frequent urination, excessive thirst, fatigue">
+                </div>
+            </div>
 
-            <label for="email">Email ID</label>
-            <input type="email" id="email" name="email" required>
-
-            <label for="contactNo">Contact Number</label>
-            <input type="text" id="contactNo" name="contactNo" required>
-
-            <label for="purpose">Booking Purpose</label>
-            <select id="purpose" name="purpose" required>
-                <option value="diabetes">Diabetes Monitoring</option>
-                <option value="other">Other</option>
-            </select>
-
-            <label for="locationInput">Enter your location:</label>
-            <input type="text" id="locationInput" name="locationInput" placeholder="e.g., Madurai, TN" required>
-
-            <button type="button" onclick="searchNearbyLabs()">Show Nearby Labs</button>
-
-            <div id="labsList"></div>
+            <div class="form-section">
+                <h3>📍 Location & Lab Search</h3>
+                <div class="form-group">
+                    <label for="locationInput">Enter your location</label>
+                    <input type="text" id="locationInput" name="locationInput" placeholder="e.g., Madurai, Tamil Nadu" required>
+                </div>
+                
+                <button type="button" class="btn" onclick="searchNearbyLabs()">
+                    🔍 Find Nearby Labs
+                </button>
+                
+                <div id="labsList"></div>
+            </div>
+            
+            <div class="booking-summary" id="bookingSummary" style="display: none;">
+                <h3>📋 Booking Summary</h3>
+                <div id="summaryContent"></div>
+                <button type="submit" class="btn btn-success">
+                    ✅ Confirm Booking
+                </button>
+            </div>
         </form>
     </div>
 
     <script>
-        function searchNearbyLabs() {
-            var location = document.getElementById("locationInput").value;
-            if (location) {
-                fetch(`geocode.php?address=${encodeURIComponent(location)}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'OK') {
-                            var latitude = data.results[0].geometry.location.lat;
-                            var longitude = data.results[0].geometry.location.lng;
+        let selectedLab = null;
+        
+        // Sample lab data for different cities in India
+        const labsDatabase = {
+            'madurai': [
+                { name: 'SRL Diagnostics', address: 'Anna Nagar, Madurai, TN 625020', rating: 4.5, distance: '2.1 km', phone: '+91-452-2345678' },
+                { name: 'Dr. Lal Diagnostic Centre', address: 'KK Nagar, Madurai, TN 625020', rating: 4.3, distance: '3.2 km', phone: '+91-452-3456789' },
+                { name: 'Thyrocare Labs', address: 'Samayanallur, Madurai, TN 625301', rating: 4.1, distance: '4.5 km', phone: '+91-452-4567890' },
+                { name: 'Apollo Diagnostics', address: 'Bypass Road, Madurai, TN 625010', rating: 4.6, distance: '5.1 km', phone: '+91-452-5678901' }
+            ],
+            'chennai': [
+                { name: 'Dr. Lal PathLabs', address: 'T. Nagar, Chennai, TN 600017', rating: 4.4, distance: '1.8 km', phone: '+91-44-2345678' },
+                { name: 'SRL Diagnostics', address: 'Adyar, Chennai, TN 600020', rating: 4.2, distance: '2.5 km', phone: '+91-44-3456789' },
+                { name: 'Metropolis Healthcare', address: 'Velachery, Chennai, TN 600042', rating: 4.5, distance: '3.1 km', phone: '+91-44-4567890' },
+                { name: 'Apollo Health Street', address: 'OMR, Chennai, TN 600096', rating: 4.3, distance: '4.2 km', phone: '+91-44-5678901' }
+            ],
+            'coimbatore': [
+                { name: 'Ganga Diagnostics', address: 'RS Puram, Coimbatore, TN 641002', rating: 4.2, distance: '1.9 km', phone: '+91-422-2345678' },
+                { name: 'SRL Diagnostics', address: 'Saibaba Colony, Coimbatore, TN 641011', rating: 4.4, distance: '2.8 km', phone: '+91-422-3456789' },
+                { name: 'Thyrocare', address: 'Peelamedu, Coimbatore, TN 641004', rating: 4.1, distance: '3.5 km', phone: '+91-422-4567890' }
+            ],
+            'default': [
+                { name: 'Local Diagnostic Centre', address: 'Main Road, Your City', rating: 4.0, distance: '2.0 km', phone: '+91-XXX-XXXXXXX' },
+                { name: 'City Health Lab', address: 'Medical Complex, Your City', rating: 4.2, distance: '3.5 km', phone: '+91-XXX-XXXXXXX' },
+                { name: 'Quick Test Lab', address: 'Hospital Road, Your City', rating: 4.1, distance: '4.2 km', phone: '+91-XXX-XXXXXXX' }
+            ]
+        };
 
-                            fetch(`fetch_labs.php?latitude=${latitude}&longitude=${longitude}`)
-                                .then(response => response.json())
-                                .then(labs => {
-                                    var labsList = document.getElementById("labsList");
-                                    labsList.innerHTML = '<h3>Nearby Labs:</h3>';
-                                    labs.forEach(lab => {
-                                        labsList.innerHTML += `<div class="lab"><strong>${lab.name}</strong><br>${lab.address}</div>`;
-                                    });
-                                })
-                                .catch(error => console.error('Error fetching labs:', error));
-                        } else {
-                            alert('Geocode was not successful for the following reason: ' + data.status);
-                        }
-                    })
-                    .catch(error => console.error('Error with geocoding request:', error));
-            } else {
-                alert('Please enter a location.');
+        function searchNearbyLabs() {
+            const location = document.getElementById("locationInput").value.toLowerCase().trim();
+            const labsList = document.getElementById("labsList");
+            
+            if (!location) {
+                showError('Please enter a location.');
+                return;
             }
+            
+            // Show loading
+            labsList.innerHTML = '<div class="loading">🔍 Searching for nearby labs...</div>';
+            
+            // Simulate API delay
+            setTimeout(() => {
+                let labs = labsDatabase['default'];
+                
+                // Check if location matches any of our cities
+                for (let city in labsDatabase) {
+                    if (location.includes(city) || city.includes(location.split(',')[0])) {
+                        labs = labsDatabase[city];
+                        break;
+                    }
+                }
+                
+                displayLabs(labs);
+            }, 1500);
         }
+        
+        function displayLabs(labs) {
+            const labsList = document.getElementById("labsList");
+            labsList.innerHTML = '<h3 style="color: #0077cc; margin-top: 30px;">🏥 Nearby Labs:</h3>';
+            
+            labs.forEach((lab, index) => {
+                labsList.innerHTML += `
+                    <div class="lab-card" onclick="selectLab(${index}, '${lab.name}', '${lab.address}', '${lab.phone}')">
+                        <div class="lab-name">${lab.name}</div>
+                        <div class="lab-address">📍 ${lab.address}</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 10px;">
+                            <span class="lab-distance">📏 ${lab.distance}</span>
+                            <span class="lab-rating">⭐ ${lab.rating}/5</span>
+                            <span style="color: #0077cc; font-weight: bold;">📞 ${lab.phone}</span>
+                        </div>
+                        <div style="margin-top: 10px; padding: 10px; background: #e7f3ff; border-radius: 5px; font-size: 0.9rem;">
+                            ✅ Diabetes monitoring available | 🕐 Same day results | 💳 Insurance accepted
+                        </div>
+                    </div>
+                `;
+            });
+        }
+        
+        function selectLab(index, name, address, phone) {
+            // Remove previous selections
+            document.querySelectorAll('.lab-card').forEach(card => {
+                card.style.borderLeft = '4px solid #28a745';
+                card.style.background = 'white';
+            });
+            
+            // Highlight selected lab
+            const selectedCard = document.querySelectorAll('.lab-card')[index];
+            selectedCard.style.borderLeft = '4px solid #0077cc';
+            selectedCard.style.background = '#e7f3ff';
+            
+            selectedLab = { name, address, phone };
+            
+            // Show booking summary
+            showBookingSummary();
+        }
+        
+        function showBookingSummary() {
+            const patientName = document.getElementById('patientName').value;
+            const purpose = document.getElementById('purpose').value;
+            const urgency = document.getElementById('urgency').value;
+            
+            if (!patientName || !purpose || !urgency) {
+                showError('Please fill in all required fields before selecting a lab.');
+                return;
+            }
+            
+            const summaryContent = document.getElementById('summaryContent');
+            const bookingSummary = document.getElementById('bookingSummary');
+            
+            summaryContent.innerHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div>
+                        <strong>Patient:</strong> ${patientName}<br>
+                        <strong>Purpose:</strong> ${purpose.replace('-', ' ')}<br>
+                        <strong>Urgency:</strong> ${urgency}<br>
+                    </div>
+                    <div>
+                        <strong>Selected Lab:</strong> ${selectedLab.name}<br>
+                        <strong>Address:</strong> ${selectedLab.address}<br>
+                        <strong>Phone:</strong> ${selectedLab.phone}<br>
+                    </div>
+                </div>
+            `;
+            
+            bookingSummary.style.display = 'block';
+            bookingSummary.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function showError(message) {
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showSuccess(message) {
+            const successMessage = document.getElementById('successMessage');
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            setTimeout(() => {
+                successMessage.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Form submission
+        document.getElementById('monitoringForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!selectedLab) {
+                showError('Please select a lab before confirming your booking.');
+                return;
+            }
+            
+            // Simulate booking confirmation
+            showSuccess('✅ Booking confirmed! You will receive a confirmation SMS shortly. Please arrive 15 minutes early with a valid ID.');
+            
+            // Store booking data (for demo)
+            const bookingData = {
+                patientName: document.getElementById('patientName').value,
+                age: document.getElementById('age').value,
+                email: document.getElementById('email').value,
+                contactNo: document.getElementById('contactNo').value,
+                purpose: document.getElementById('purpose').value,
+                urgency: document.getElementById('urgency').value,
+                symptoms: document.getElementById('symptoms').value,
+                location: document.getElementById('locationInput').value,
+                selectedLab: selectedLab,
+                bookingDate: new Date().toISOString(),
+                bookingId: 'BK' + Date.now()
+            };
+            
+            localStorage.setItem('latestBooking', JSON.stringify(bookingData));
+            
+            // Reset form after 3 seconds
+            setTimeout(() => {
+                document.getElementById('monitoringForm').reset();
+                document.getElementById('bookingSummary').style.display = 'none';
+                document.getElementById('labsList').innerHTML = '';
+                selectedLab = null;
+            }, 3000);
+        });
+        
+        // Auto-fill user data if logged in
+        window.onload = function() {
+            const userData = localStorage.getItem('userData');
+            if (userData) {
+                const user = JSON.parse(userData);
+                document.getElementById('patientName').value = `${user.firstName} ${user.lastName}`;
+                document.getElementById('email').value = user.email;
+                document.getElementById('contactNo').value = user.phone || '';
+                
+                // Calculate age from date of birth
+                if (user.dateOfBirth) {
+                    const birthDate = new Date(user.dateOfBirth);
+                    const today = new Date();
+                    const age = today.getFullYear() - birthDate.getFullYear();
+                    document.getElementById('age').value = age;
+                }
+            }
+        };
+        
+        // Phone number formatting
+        document.getElementById('contactNo').addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length >= 6) {
+                value = value.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+            }
+            this.value = value;
+        });
     </script>
+
 </body>
 </html>
